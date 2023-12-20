@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="./sample-donut-chart.css" rel="stylesheet" type="text/css" media="all">
+    <script src="http://d3js.org/d3.v7.min.js" charset="utf-8"></script>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="section-wrapper">
+            <div class="chart-wrapper">
+                <div class="chart-name">①プログラミング言語</div>
+                <div id="donut-chart-programing-language"></div>
+            </div>
+            <div class="legend">
+                <div id="legend-programing-language"></div>
+            </div>
+        </div>
+        <div class="section-wrapper">
+            <div class="chart-wrapper">
+                <div class="chart-name">②ライブラリ・フレームワーク</div>
+                <div id="donut-chart-library-framework"></div>
+            </div>
+            <div class="legend">
+                <div id="legend-library-framework"></div>
+            </div>
+        </div>
+        <div class="section-wrapper">
+            <div class="chart-wrapper">
+                <div class="chart-name">③開発ツール</div>
+                <div id="donut-chart-development-tool"></div>
+            </div>
+            <div class="legend">
+                <div id="legend-development-tool"></div>
+            </div>
+        </div>
+        <div class="section-wrapper">
+            <div class="chart-wrapper">
+                <div class="chart-name">④DB</div>
+                <div id="donut-chart-database"></div>
+            </div>
+            <div class="legend">
+                <div id="legend-database"></div>
+            </div>
+        </div>
+    </div>
+    <script src="../donut_chart/donutChart.js"></script>
+    <script src="../donut_chart/index.js" type="module"></script>
+</body>
+</html>

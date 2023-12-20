@@ -1,0 +1,22 @@
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+.section-wrapper {
+    display: flex;
+    gap: 10%;
+    margin: 10px;
+}
+
+.chart-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.legend {
+    border: 1px solid black;
+    width: 60%;
+}
