@@ -14,6 +14,7 @@
 
       const editData = getEditData(data);
       const checkedSortMaxValueData = getCheckedSortMaxValueData(editData, checkedMap);
+      const bisectDate = d3.bisector((d) => d.date).left;
 
       const xMax = d3.max(editData[0].like, (like) => like.date);
       const xMin = d3.min(editData[0].like, (like) => like.date);
@@ -101,11 +102,115 @@
         .attr('stroke-width', 1)
         .attr('stroke-dasharray', '4.2');
 
+      const tooltip = contents
+        .append('span')
+        .attr('class', 'tooltip')
+        .style('opacity', 0.7)
+        .style('position', 'absolute')
+        .style('background', '#000')
+        .style('border-radius', 8 + 'px')
+        .style('color', '#fff')
+        .style('text-align', 'center')
+        .style('pointer-event', 'none')
+        .style('display', 'none')
+        .style('top', 0 + 'px')
+        .style('left', 0 + 'px')
+        .style('padding', 10 + 'px')
+        .style('white-space', 'nowrap');
+
+      const tooltipYear = tooltip
+        .append('div')
+        .attr('class', 'year')
+        .style('width', 100 + '%')
+        .style('padding-top', 3 + 'px')
+        .style('padding-bottom', 3 + 'px')
+        .style('white-space', 'nowrap');
+
+      const tooltipJob = tooltip
+        .append('div')
+        .attr('class', 'job')
+        .style('width', 100 + '%')
+        .style('padding-top', 3 + 'px')
+        .style('padding-bottom', 3 + 'px')
+        .style('white-space', 'nowrap');
+
+      svg
+        .append('rect')
+        .attr('transform', 'translate(' + MARGIN.LEFT + ',' + MARGIN.TOP + ')')
+        .attr('class', 'overlay')
+        .attr('fill', 'none')
+        .attr('pointer-events', 'all')
+        .attr('width', plotWidth)
+        .attr('height', plotHeight)
+        .on('mouseover', (e) => mouseOverLineChart())
+        .on('mouseout', (e) => mouseOutLineChart())
+        .on('mousemove', (e) => mouseMoveLineChart(e));
+
       // 各データの折れ線グラフを作成
       editData.forEach((d) => {
         const isChecked = checkedMap.get(d.key);
         createGraph(svg, d, isChecked, xScale, yScale);
       });
+
+      function mouseOverLineChart() {
+        tooltip.style('display', 'block');
+      }
+
+      function mouseOutLineChart() {
+        tooltip.style('display', 'none');
+      }
+
+      function mouseMoveLineChart(e) {
+        const focusData = getFocusData(e);
+        setTooltipData(focusData);
+        tooltip
+          .transition()
+          .duration(200)
+          .ease(d3.easeLinear)
+          .style('left', xScale(focusData.date) + toolTipPosX(e) + 'px')
+          .style('top', toolTipPosY(e) + 'px');
+      }
+
+      /**
+       * マウス位置から1番近いデータを取得する
+       * @param {*} event
+       * @returns
+       */
+      function getFocusData(event) {
+        // カーソルの位置からX軸の値を取得
+        const x = xScale.invert(d3.pointer(event)[0] + MARGIN.LEFT);
+        const i =
+          bisectDate(editData[0].like, x, 1) < bisectDate(editData[0].like, xMax, 1)
+            ? bisectDate(editData[0].like, x, 1)
+            : bisectDate(editData[0].like, xMax, 1);
+
+        const d0 = editData[0].like[i - 1];
+        const d1 = editData[0].like[i];
+
+        return x - d0.date > d1.date - x ? d1 : d0;
+      }
+
+      function setTooltipData(d) {
+        tooltipYear.html(() => {
+          const timeFormat = d3.timeFormat('%Y年%m月');
+          return timeFormat(d.date);
+        });
+        tooltipJob.html(d.job);
+      }
+
+      function toolTipPosX(event) {
+        const rightPos = 40;
+        tooltip.style('display', 'block');
+        const toolTipPos =
+          d3.pointer(event)[0] > plotWidth / 2
+            ? -rightPos - tooltip.node().getBoundingClientRect().width
+            : rightPos;
+        return toolTipPos;
+      }
+
+      function toolTipPosY(event) {
+        return d3.pointer(event)[1];
+      }
     },
   };
 
@@ -123,7 +228,7 @@
         title: d.title,
         color: d.color,
         like: d.like.map((like) => {
-          return { date: new Date(like.date), value: like.value };
+          return { date: new Date(like.date), value: like.value, job: like.job };
         }),
         maxValue: Math.max(...d.like.map((like) => like.value)),
       };
@@ -171,6 +276,7 @@
       .attr('stroke', dataSection.color)
       .attr('stroke-width', 4.0)
       .attr('visibility', isChecked ? 'visible' : 'hidden')
+      .attr('pointer-events', 'none')
       .attr(
         'd',
         d3
