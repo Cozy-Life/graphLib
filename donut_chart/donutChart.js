@@ -6,7 +6,7 @@
 
   const DonutChart = {
     drawDonutChart: (data, id) => {
-      const contents = d3.select(id);
+      const contents = d3.select('#' + id);
       const WIDTH = 400;
       const HEIGHT = 400;
       const RADIUS = Math.min(WIDTH, HEIGHT) / 2;
@@ -41,6 +41,11 @@
         .on('mouseover', (e, d) => mouseOverFunc(e, d))
         .on('mouseout', (e, d) => mouseOutFunc(e, d));
 
+      /**
+       * マウスオーバーした時の処理
+       * @param {*} e
+       * @param {*} targetData
+       */
       function mouseOverFunc(e, targetData) {
         setOpacityNotHoverData(svg, targetData.data);
         displayText(svg, targetData.data);
@@ -49,6 +54,11 @@
         }
       }
 
+      /**
+       * マウスアウトした時の処理
+       * @param {*} e
+       * @param {*} targetData
+       */
       function mouseOutFunc(e, targetData) {
         setOpacityDefault(svg);
         clearText(svg);
@@ -58,35 +68,45 @@
       }
     },
 
-    mouseOverDonutChart: (clickDonutChartCb) => {
-      mouseOverDonutChartFunc = clickDonutChartCb;
+    mouseOverDonutChart: (mouseOverDonutChartCb) => {
+      mouseOverDonutChartFunc = mouseOverDonutChartCb;
     },
 
     mouseOutDonutChart: (mouseOutDonutChartCb) => {
       mouseOutDonutChartFunc = mouseOutDonutChartCb;
     },
 
-    legendMouseOver: (id, targetData) => {
-      const svg = d3.select(id).select('svg');
+    mouseOverLegend: (id, targetData) => {
+      const svg = d3.select('#' + id).select('svg');
       setOpacityNotHoverData(svg, targetData);
       clearText(svg);
       displayText(svg, targetData);
     },
 
-    legendMouseOut: (id) => {
-      const svg = d3.select(id);
+    mouseOutLegend: (id) => {
+      const svg = d3.select('#' + id);
       setOpacityDefault(svg);
       clearText(svg);
     },
   };
 
+  /**
+   * ターゲットのデータを表示する
+   * @param {*} svg
+   * @param {*} targetData
+   */
   function displayText(svg, targetData) {
     clearText(svg);
-    displayLangulage(svg, targetData);
+    displayName(svg, targetData);
     displayExperience(svg, targetData);
   }
 
-  function displayLangulage(svg, targetData) {
+  /**
+   * データの名前を円の真ん中に表示する
+   * @param {*} svg
+   * @param {*} targetData
+   */
+  function displayName(svg, targetData) {
     svg
       .append('text')
       .attr('font-family', 'sans-serif')
@@ -99,6 +119,11 @@
       .call((text) => text.append('tspan').text(`${targetData.name}`));
   }
 
+  /**
+   * 円の真ん中に経験年数を表示する
+   * @param {*} svg
+   * @param {*} targetData
+   */
   function displayExperience(svg, targetData) {
     svg
       .append('text')
@@ -110,6 +135,11 @@
       .text(getExperience(targetData));
   }
 
+  /**
+   * 月単位のデータを表示用に加工する
+   * @param {*} targetData
+   * @returns
+   */
   function getExperience(targetData) {
     const MONTH = 12;
     const totalExperienceMonths = targetData.value;
@@ -121,14 +151,27 @@
       : `${experienceMonths}ヶ月`;
   }
 
+  /**
+   * 円グラフの表示をクリアする
+   * @param {*} svg
+   */
   function clearText(svg) {
     svg.selectAll('text').remove();
   }
 
+  /**
+   * 円グラフの透過度をデフォルトにする
+   * @param {*} svg
+   */
   function setOpacityDefault(svg) {
     svg.selectAll('path').style('opacity', 1);
   }
 
+  /**
+   * ホバーしていない円グラフの透過度を薄くする
+   * @param {*} svg
+   * @param {*} targetData
+   */
   function setOpacityNotHoverData(svg, targetData) {
     svg
       .selectAll('path')

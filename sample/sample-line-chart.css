@@ -1,0 +1,11 @@
+.content-wrapper {
+    display: flex;
+}
+
+.list {
+    display: block;
+}
+
+#line-chart {
+    width: 600px;
+}

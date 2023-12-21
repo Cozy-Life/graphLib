@@ -6,22 +6,22 @@ import { databaseData } from '../stub/data/database.js';
 // データセット
 const programingSection = {
   data: programingLangulageData,
-  graphId: '#donut-chart-programing-language',
+  graphId: 'donut-chart-programing-language',
   legendId: 'legend-programing-language',
 };
 const libraryFrameworkSection = {
   data: libraryFrameworkData,
-  graphId: '#donut-chart-library-framework',
+  graphId: 'donut-chart-library-framework',
   legendId: 'legend-library-framework',
 };
 const developmentTooloSection = {
   data: developmentToolData,
-  graphId: '#donut-chart-development-tool',
+  graphId: 'donut-chart-development-tool',
   legendId: 'legend-development-tool',
 };
 const databaseSection = {
   data: databaseData,
-  graphId: '#donut-chart-database',
+  graphId: 'donut-chart-database',
   legendId: 'legend-database',
 };
 
@@ -83,13 +83,13 @@ function createTable(section) {
           ? (childNode.style.opacity = '1')
           : (childNode.style.opacity = '0.1');
       });
-      DonutChart.legendMouseOver(section.graphId, mouseOverData);
+      DonutChart.mouseOverLegend(section.graphId, mouseOverData);
     });
     childDivEl.addEventListener('mouseout', (e) => {
       childDivEl.parentElement.childNodes.forEach((childNode) => {
         childNode.style.opacity = '1';
       });
-      DonutChart.legendMouseOut(section.graphId);
+      DonutChart.mouseOutLegend(section.graphId);
     });
 
     const childColorSpanEl = document.createElement('span');
