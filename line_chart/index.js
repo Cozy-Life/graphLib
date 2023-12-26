@@ -27,13 +27,13 @@ function createTable(lineGraphObj) {
     childInputEl.setAttribute('type', 'checkbox');
     childInputEl.setAttribute('id', data.key);
     childInputEl.checked = checkedMap.get(data.key);
-
-    const childLabelEl = document.createElement('label');
-    childLabelEl.setAttribute('for', data.key);
-    childLabelEl.addEventListener('click', (e) => {
+    childInputEl.addEventListener('click', (e) => {
       checkedMap.set(data.key, !checkedMap.get(data.key));
       LineChart.drawLineChart(lineGraphObj.data, lineGraphObj.graphId, checkedMap, 400, 400);
     });
+
+    const childLabelEl = document.createElement('label');
+    childLabelEl.setAttribute('for', data.key);
 
     const childColorSpanEl = document.createElement('span');
     childColorSpanEl.innerHTML = '⚫︎';
