@@ -46,17 +46,17 @@ createTable(developmentTooloSection);
 createTable(databaseSection);
 
 function mouseOverDonutChartCb(data) {
-  const sectionObj = dataMap.get(data.part);
+  const sectionObj = dataMap.get(data.data.part);
   const element = document.getElementById(sectionObj.legendId);
   element.childNodes.forEach((childNode) => {
-    childNode.childNodes[2].innerText === String(data.key)
+    childNode.childNodes[2].innerText === String(data.data.key)
       ? (childNode.style.opacity = '1')
       : (childNode.style.opacity = '0.1');
   });
 }
 
 function mouseOutDonutChartCb(data) {
-  const sectionObj = dataMap.get(data.part);
+  const sectionObj = dataMap.get(data.data.part);
   const element = document.getElementById(sectionObj.legendId);
   element.childNodes.forEach((childNode) => {
     childNode.style.opacity = '1';
