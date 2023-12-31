@@ -8,4 +8,5 @@
 
 #line-chart {
     width: 600px;
+    position: relative;
 }
